@@ -19,9 +19,13 @@
   "scripts": {
     "lint": "biome check --fix src/",
     "dev": "parcel index.html --port 1235",
+    "server": "node server.js",
     "build": "parcel build index.html --public-url /roulette/ && node scripts/build-sw.js"
   },
   "dependencies": {
-    "box2d-wasm": "^7.0.0"
+    "box2d-wasm": "^7.0.0",
+    "chzzk": "^1.10.4",
+    "cors": "^2.8.6",
+    "express": "^5.2.1"
   }
 }

@@ -35,6 +35,218 @@
   <meta property="og:type" content="website">
 
   <link rel='stylesheet' href='assets/style.scss' />
+
+  <style>
+    /* ── 치지직 패널 ─────────────────────────────── */
+    .chzzk-panel {
+      margin-bottom: 8px;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(0, 0, 0, 0.25);
+    }
+
+    .chzzk-toggle {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 12px;
+      background: rgba(3, 199, 115, 0.12);
+      border: none;
+      cursor: pointer;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: #ccc;
+      letter-spacing: 0.5px;
+      transition: background 0.2s;
+    }
+    .chzzk-toggle:hover { background: rgba(3, 199, 115, 0.2); }
+    .chzzk-toggle .chzzk-logo {
+      width: 18px; height: 18px;
+      background: #03c773;
+      border-radius: 4px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 10px; font-weight: bold; color: #fff; flex-shrink: 0;
+    }
+    .chzzk-toggle .chzzk-arrow {
+      margin-left: auto;
+      font-size: 0.7rem;
+      transition: transform 0.2s;
+    }
+    .chzzk-toggle.open .chzzk-arrow { transform: rotate(180deg); }
+
+    .chzzk-body {
+      display: none;
+      flex-direction: column;
+      gap: 8px;
+      padding: 12px;
+    }
+    .chzzk-body.open { display: flex; }
+
+    .chzzk-row {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .chzzk-input {
+      flex: 1;
+      padding: 7px 10px;
+      border-radius: 7px;
+      border: 1px solid rgba(255,255,255,0.15);
+      background: rgba(255,255,255,0.07);
+      color: #eee;
+      font-size: 0.82rem;
+      outline: none;
+    }
+    .chzzk-input:focus { border-color: #03c773; }
+    .chzzk-input::placeholder { color: rgba(255,255,255,0.25); }
+
+    .chzzk-btn {
+      padding: 7px 11px;
+      border-radius: 7px;
+      border: none;
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: opacity 0.15s;
+    }
+    .chzzk-btn:hover:not(:disabled) { opacity: 0.85; }
+    .chzzk-btn:disabled { opacity: 0.4; cursor: default; }
+    .chzzk-btn-green  { background: #03c773; color: #fff; }
+    .chzzk-btn-gray   { background: rgba(255,255,255,0.1); color: #ccc; }
+    .chzzk-btn-red    { background: #e74c3c; color: #fff; }
+    .chzzk-btn-purple { background: #6c5ce7; color: #fff; }
+
+    /* 검색 결과 드롭다운 */
+    .chzzk-search-results {
+      position: relative;
+    }
+    .chzzk-dropdown {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0; right: 0;
+      background: #1e1e2e;
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 8px;
+      overflow: hidden;
+      z-index: 100;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+    }
+    .chzzk-dropdown.show { display: block; }
+    .chzzk-dropdown-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      cursor: pointer;
+      font-size: 0.82rem;
+      transition: background 0.15s;
+    }
+    .chzzk-dropdown-item:hover { background: rgba(3,199,115,0.15); }
+    .chzzk-live-badge {
+      background: #e74c3c;
+      color: #fff;
+      font-size: 0.65rem;
+      font-weight: bold;
+      padding: 1px 5px;
+      border-radius: 4px;
+      margin-left: auto;
+      flex-shrink: 0;
+    }
+
+    /* 상태 표시 */
+    .chzzk-status {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.78rem;
+      color: rgba(255,255,255,0.5);
+      min-height: 18px;
+    }
+    .chzzk-dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: #555;
+      flex-shrink: 0;
+    }
+    .chzzk-dot.connected    { background: #03c773; box-shadow: 0 0 6px #03c773; }
+    .chzzk-dot.connecting   { background: #f39c12; animation: pulse 1s infinite; }
+    .chzzk-dot.error        { background: #e74c3c; }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.3; }
+    }
+
+    /* 참여자 */
+    .chzzk-participants-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.75rem;
+      color: rgba(255,255,255,0.4);
+    }
+    .chzzk-count-badge {
+      background: #03c773;
+      color: #fff;
+      font-size: 0.7rem;
+      font-weight: bold;
+      padding: 1px 7px;
+      border-radius: 10px;
+      min-width: 20px;
+      text-align: center;
+    }
+    .chzzk-participant-list {
+      max-height: 130px;
+      overflow-y: auto;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+    }
+    .chzzk-participant-list::-webkit-scrollbar { width: 3px; }
+    .chzzk-participant-list::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 3px; }
+    .chzzk-chip {
+      background: rgba(3, 199, 115, 0.12);
+      border: 1px solid rgba(3, 199, 115, 0.3);
+      border-radius: 12px;
+      padding: 2px 8px;
+      font-size: 0.75rem;
+      color: #b8f5da;
+      animation: chipIn 0.2s ease;
+    }
+    @keyframes chipIn { from { opacity:0; transform:scale(0.8); } to { opacity:1; transform:scale(1); } }
+    .chzzk-empty {
+      font-size: 0.75rem;
+      color: rgba(255,255,255,0.2);
+      font-style: italic;
+    }
+
+    .chzzk-apply-btn {
+      padding: 9px;
+      border-radius: 8px;
+      border: none;
+      background: linear-gradient(135deg, #03c773, #00a65a);
+      color: #fff;
+      font-size: 0.85rem;
+      font-weight: bold;
+      cursor: pointer;
+      letter-spacing: 0.5px;
+      transition: opacity 0.15s, transform 0.1s;
+      box-shadow: 0 2px 12px rgba(3,199,115,0.35);
+    }
+    .chzzk-apply-btn:hover:not(:disabled) { opacity: 0.9; transform: translateY(-1px); }
+    .chzzk-apply-btn:disabled { opacity: 0.35; cursor: default; }
+
+    .chzzk-label {
+      font-size: 0.72rem;
+      color: rgba(255,255,255,0.35);
+      white-space: nowrap;
+    }
+  </style>
 </head>
 <body>
 <script type="module" src="./src/index.ts"></script>
@@ -322,6 +534,234 @@
     checkNotice();
   }
 </script>
+
+<!-- ── 치지직 연동 스크립트 ───────────────────────────── -->
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+(function () {
+  const PROXY = 'http://localhost:3001';
+
+  let selectedChannelId   = '';
+  let selectedChannelName = '';
+  let eventSource         = null;
+
+  /** uid → nickname (중복 방지) */
+  const participants = new Map();
+
+  /* ── DOM 참조 ─────────────────────────────── */
+  const $ = id => document.getElementById(id);
+
+  /* ── 패널 토글 ────────────────────────────── */
+  $('btnChzzkToggle').addEventListener('click', () => {
+    const body   = $('chzzkBody');
+    const toggle = $('btnChzzkToggle');
+    const open   = body.classList.toggle('open');
+    toggle.classList.toggle('open', open);
+  });
+
+  /* ── 채널 검색 ────────────────────────────── */
+  $('btnChzzkSearch').addEventListener('click', searchChannel);
+  $('chzzkChannelInput').addEventListener('keydown', e => {
+    if (e.key === 'Enter') searchChannel();
+  });
+
+  async function searchChannel() {
+    const keyword = $('chzzkChannelInput').value.trim();
+    if (!keyword) return;
+
+    const dropdown = $('chzzkDropdown');
+    dropdown.innerHTML = '<div class="chzzk-dropdown-item" style="color:#888">검색 중...</div>';
+    dropdown.classList.add('show');
+
+    try {
+      const res  = await fetch(`${PROXY}/chzzk/search?keyword=${encodeURIComponent(keyword)}`);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+
+      if (!data.channels || data.channels.length === 0) {
+        dropdown.innerHTML = '<div class="chzzk-dropdown-item" style="color:#888">결과 없음</div>';
+        return;
+      }
+
+      dropdown.innerHTML = '';
+      data.channels.forEach(ch => {
+        const item = document.createElement('div');
+        item.className = 'chzzk-dropdown-item';
+        item.innerHTML = `
+          <span style="flex:1">${escHtml(ch.channelName)}</span>
+          ${ch.openLive ? '<span class="chzzk-live-badge">LIVE</span>' : ''}
+        `;
+        item.addEventListener('click', () => {
+          selectChannel(ch.channelId, ch.channelName);
+          dropdown.classList.remove('show');
+          $('chzzkChannelInput').value = ch.channelName;
+        });
+        dropdown.appendChild(item);
+      });
+
+    } catch (e) {
+      dropdown.innerHTML = `<div class="chzzk-dropdown-item" style="color:#e74c3c">
+        서버 오류: ${escHtml(e.message)}<br>
+        <small style="color:#888">node server.js 실행 여부를 확인하세요</small>
+      </div>`;
+    }
+  }
+
+  /* 드롭다운 외부 클릭 시 닫기 */
+  document.addEventListener('click', e => {
+    if (!e.target.closest('.chzzk-search-results')) {
+      $('chzzkDropdown').classList.remove('show');
+    }
+  });
+
+  function selectChannel(id, name) {
+    selectedChannelId   = id;
+    selectedChannelName = name;
+    $('chzzkSelectedLabel').textContent = `📺 ${name}`;
+    $('btnChzzkConnect').disabled = false;
+  }
+
+  /* ── 연결 / 해제 ──────────────────────────── */
+  $('btnChzzkConnect').addEventListener('click', connectChat);
+  $('btnChzzkDisconnect').addEventListener('click', disconnectChat);
+
+  function connectChat() {
+    if (!selectedChannelId) {
+      alert('채널을 먼저 검색하여 선택하세요.');
+      return;
+    }
+    if (eventSource) disconnectChat();
+
+    const command = $('chzzkCommand').value.trim() || '!참여';
+    setStatus('connecting', '연결 중...');
+    $('btnChzzkConnect').disabled    = true;
+    $('btnChzzkDisconnect').disabled = false;
+
+    const url = `${PROXY}/chzzk/chat?channelId=${encodeURIComponent(selectedChannelId)}&command=${encodeURIComponent(command)}`;
+    eventSource = new EventSource(url);
+
+    eventSource.onmessage = e => {
+      let data;
+      try { data = JSON.parse(e.data); } catch (_) { return; }
+
+      switch (data.type) {
+        case 'connected':
+          setStatus('connected', `연결됨 · ${escHtml(selectedChannelName)}`);
+          break;
+
+        case 'participant': {
+          const key = data.uid || data.nickname;
+          if (!participants.has(key)) {
+            participants.set(key, data.nickname);
+            addChip(data.nickname);
+            updateCount();
+          }
+          break;
+        }
+
+        case 'disconnected':
+          setStatus('', '연결 해제됨');
+          $('btnChzzkConnect').disabled    = false;
+          $('btnChzzkDisconnect').disabled = true;
+          break;
+
+        case 'error':
+          setStatus('error', '오류: ' + data.message);
+          $('btnChzzkConnect').disabled    = false;
+          $('btnChzzkDisconnect').disabled = true;
+          eventSource && eventSource.close();
+          eventSource = null;
+          break;
+      }
+    };
+
+    eventSource.onerror = () => {
+      setStatus('error', '서버 연결 실패 (node server.js 실행 확인)');
+      $('btnChzzkConnect').disabled    = false;
+      $('btnChzzkDisconnect').disabled = true;
+      eventSource && eventSource.close();
+      eventSource = null;
+    };
+  }
+
+  function disconnectChat() {
+    if (eventSource) { eventSource.close(); eventSource = null; }
+    if (selectedChannelId) {
+      fetch(`${PROXY}/chzzk/disconnect`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ channelId: selectedChannelId }),
+      }).catch(() => {});
+    }
+    setStatus('', '연결 해제됨');
+    $('btnChzzkConnect').disabled    = false;
+    $('btnChzzkDisconnect').disabled = true;
+  }
+
+  /* ── 참여자 UI ─────────────────────────────── */
+  function addChip(nickname) {
+    const list = $('chzzkParticipantList');
+    // 빈 상태 메시지 제거
+    const empty = list.querySelector('.chzzk-empty');
+    if (empty) empty.remove();
+
+    const chip = document.createElement('span');
+    chip.className = 'chzzk-chip';
+    chip.textContent = nickname;
+    list.appendChild(chip);
+  }
+
+  function updateCount() {
+    const n = participants.size;
+    $('chzzkCountBadge').textContent = n;
+    $('btnChzzkApply').disabled = n === 0;
+  }
+
+  $('btnChzzkClear').addEventListener('click', () => {
+    participants.clear();
+    $('chzzkParticipantList').innerHTML = '<span class="chzzk-empty">참여자가 없습니다</span>';
+    updateCount();
+  });
+
+  /* ── 룰렛에 적용 ───────────────────────────── */
+  $('btnChzzkApply').addEventListener('click', () => {
+    if (participants.size === 0) return;
+    const names = Array.from(participants.values()).join('\n');
+    document.querySelector('#in_names').value = names;
+
+    // 원본 roulette 이벤트 트리거
+    document.querySelector('#in_names').dispatchEvent(new Event('input'));
+
+    // 시각적 피드백 토스트
+    showChzzkToast(`✅ 참여자 ${participants.size}명이 룰렛에 추가됐어요!`);
+  });
+
+  /* ── 상태 표시 ─────────────────────────────── */
+  function setStatus(state, text) {
+    $('chzzkDot').className = 'chzzk-dot' + (state ? ' ' + state : '');
+    $('chzzkStatusText').textContent = text;
+  }
+
+  /* ── 토스트 알림 ───────────────────────────── */
+  function showChzzkToast(msg) {
+    const t = document.createElement('div');
+    t.className = 'toast';
+    t.style.cssText = 'background:#03c773;color:#fff;';
+    t.textContent   = msg;
+    document.body.appendChild(t);
+    setTimeout(() => document.body.removeChild(t), 2000);
+  }
+
+  /* ── HTML 이스케이프 ──────────────────────── */
+  function escHtml(s) {
+    return String(s)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
+  }
+})();
+}); // DOMContentLoaded
+</script>
 <div id="settings" class="settings">
   <div class="right">
     <button id="btnToggleSettings" class="btn-toggle-settings">
@@ -374,6 +814,65 @@
   </div>
   <div class="left">
     <h3 data-trans>Enter names below</h3>
+
+    <!-- ── 치지직 연동 패널 ─────────────────────── -->
+    <div class="chzzk-panel">
+      <button class="chzzk-toggle" id="btnChzzkToggle">
+        <span class="chzzk-logo">치</span>
+        치지직 채팅 연동
+        <span class="chzzk-arrow">▼</span>
+      </button>
+      <div class="chzzk-body" id="chzzkBody">
+
+        <!-- 채널 검색 -->
+        <div class="chzzk-row chzzk-search-results">
+          <input class="chzzk-input" id="chzzkChannelInput"
+                 placeholder="채널명 또는 채널 ID" autocomplete="off" />
+          <button class="chzzk-btn chzzk-btn-gray" id="btnChzzkSearch">검색</button>
+          <div class="chzzk-dropdown" id="chzzkDropdown"></div>
+        </div>
+
+        <!-- 선택된 채널 + 연결 버튼 -->
+        <div class="chzzk-row">
+          <span class="chzzk-label" id="chzzkSelectedLabel" style="flex:1;color:#03c773;">채널을 선택하세요</span>
+          <button class="chzzk-btn chzzk-btn-green" id="btnChzzkConnect">연결</button>
+          <button class="chzzk-btn chzzk-btn-red"  id="btnChzzkDisconnect" disabled>해제</button>
+        </div>
+
+        <!-- 연결 상태 -->
+        <div class="chzzk-status">
+          <span class="chzzk-dot" id="chzzkDot"></span>
+          <span id="chzzkStatusText">연결 안 됨</span>
+        </div>
+
+        <!-- 참여 명령어 -->
+        <div class="chzzk-row">
+          <span class="chzzk-label">참여 명령어</span>
+          <input class="chzzk-input" id="chzzkCommand" value="!참여" style="max-width:90px;" />
+        </div>
+
+        <!-- 참여자 목록 -->
+        <div class="chzzk-participants-header">
+          <span>참여자</span>
+          <div style="display:flex;gap:6px;align-items:center;">
+            <span class="chzzk-count-badge" id="chzzkCountBadge">0</span>
+            <button class="chzzk-btn chzzk-btn-gray" id="btnChzzkClear"
+                    style="padding:2px 8px;font-size:0.72rem;">초기화</button>
+          </div>
+        </div>
+        <div class="chzzk-participant-list" id="chzzkParticipantList">
+          <span class="chzzk-empty">참여자가 없습니다</span>
+        </div>
+
+        <!-- 룰렛에 적용 -->
+        <button class="chzzk-apply-btn" id="btnChzzkApply" disabled>
+          ▶ 룰렛에 적용
+        </button>
+
+      </div>
+    </div>
+    <!-- ─────────────────────────────────────────── -->
+
     <textarea id="in_names" placeholder="Input names separated by commas or line feed here" data-trans="placeholder">수박*2,키위*2,귤*2</textarea>
     <div class="actions">
       <button id="btnNotice">
