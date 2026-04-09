@@ -104,7 +104,7 @@ export const stages: StageDef[] = [
       // D3 우측 갭 (x=17~23)
       { type: 'kinematic', position: { x: 20, y: 56 }, props: { density: 1, angularVelocity: -4, restitution: 0 }, shape: { type: 'box', width: 2.5, height: 0.1, rotation: 0, color: '#ff6a00', bloomColor: '#ff6a00' } },
       // D4 아래 좌측 채널 (x=3~9) 추가 스피너
-      { type: 'kinematic', position: { x: 6,  y: 64 }, props: { density: 1, angularVelocity: -4, restitution: 0 }, shape: { type: 'box', width: 3.0, height: 0.1, rotation: 0, color: '#ff6a00', bloomColor: '#ff6a00' } },
+      { type: 'kinematic', position: { x: 6,  y: 64 }, props: { density: 1, angularVelocity:  4, restitution: 0 }, shape: { type: 'box', width: 3.0, height: 0.1, rotation: 0, color: '#ff6a00', bloomColor: '#ff6a00' } },
       // === 퍼널 입구/내부 스피너 ===
       // 마블이 좌측(x=3~9)으로 몰려 퍼널 왼쪽 벽을 타고 내려오므로
       // 좌측 → 중앙으로 이어지는 경로에 배치
