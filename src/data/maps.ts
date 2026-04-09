@@ -9,6 +9,111 @@ export type StageDef = {
 
 export const stages: StageDef[] = [
   {
+    title: 'Cascade Falls',
+    goalY: 115,
+    zoomY: 107,
+    entities: [
+      // === 외벽 ===
+      // 좌벽: 좁은 스폰 튜브(y=-300~3) → 넓은 채널(y=3~97) → 하단 퍼널(y=97~116)
+      {
+        type: 'static',
+        position: { x: 0, y: 0 },
+        props: { density: 1, angularVelocity: 0, restitution: 0.2 },
+        shape: {
+          type: 'polyline',
+          rotation: 0,
+          points: [
+            [9.25, -300],
+            [9.25, 3],
+            [3, 10],
+            [3, 97],
+            [10.5, 107],
+            [10.5, 116],
+          ],
+        },
+      },
+      // 우벽
+      {
+        type: 'static',
+        position: { x: 0, y: 0 },
+        props: { density: 1, angularVelocity: 0, restitution: 0.2 },
+        shape: {
+          type: 'polyline',
+          rotation: 0,
+          points: [
+            [16.75, -300],
+            [16.75, 3],
+            [23, 10],
+            [23, 97],
+            [15.5, 107],
+            [15.5, 116],
+          ],
+        },
+      },
+      // === 핀 Row A (y=14) ===
+      { type: 'static', position: { x: 6.5,  y: 14 }, props: { density: 1, angularVelocity: 0, restitution: 0.3 }, shape: { type: 'box', width: 0.25, height: 0.25, rotation: 0.785 } },
+      { type: 'static', position: { x: 9.5,  y: 14 }, props: { density: 1, angularVelocity: 0, restitution: 0.3 }, shape: { type: 'box', width: 0.25, height: 0.25, rotation: 0.785 } },
+      { type: 'static', position: { x: 12.5, y: 14 }, props: { density: 1, angularVelocity: 0, restitution: 0.3 }, shape: { type: 'box', width: 0.25, height: 0.25, rotation: 0.785 } },
+      { type: 'static', position: { x: 15.5, y: 14 }, props: { density: 1, angularVelocity: 0, restitution: 0.3 }, shape: { type: 'box', width: 0.25, height: 0.25, rotation: 0.785 } },
+      { type: 'static', position: { x: 18.5, y: 14 }, props: { density: 1, angularVelocity: 0, restitution: 0.3 }, shape: { type: 'box', width: 0.25, height: 0.25, rotation: 0.785 } },
+      // === 핀 Row B (y=20) ===
+      { type: 'static', position: { x: 8,  y: 20 }, props: { density: 1, angularVelocity: 0, restitution: 0.3 }, shape: { type: 'box', width: 0.25, height: 0.25, rotation: 0.785 } },
+      { type: 'static', position: { x: 11, y: 20 }, props: { density: 1, angularVelocity: 0, restitution: 0.3 }, shape: { type: 'box', width: 0.25, height: 0.25, rotation: 0.785 } },
+      { type: 'static', position: { x: 14, y: 20 }, props: { density: 1, angularVelocity: 0, restitution: 0.3 }, shape: { type: 'box', width: 0.25, height: 0.25, rotation: 0.785 } },
+      { type: 'static', position: { x: 17, y: 20 }, props: { density: 1, angularVelocity: 0, restitution: 0.3 }, shape: { type: 'box', width: 0.25, height: 0.25, rotation: 0.785 } },
+      { type: 'static', position: { x: 20, y: 20 }, props: { density: 1, angularVelocity: 0, restitution: 0.3 }, shape: { type: 'box', width: 0.25, height: 0.25, rotation: 0.785 } },
+      // === 핀 Row C (y=26) ===
+      { type: 'static', position: { x: 6.5,  y: 26 }, props: { density: 1, angularVelocity: 0, restitution: 0.3 }, shape: { type: 'box', width: 0.25, height: 0.25, rotation: 0.785 } },
+      { type: 'static', position: { x: 9.5,  y: 26 }, props: { density: 1, angularVelocity: 0, restitution: 0.3 }, shape: { type: 'box', width: 0.25, height: 0.25, rotation: 0.785 } },
+      { type: 'static', position: { x: 12.5, y: 26 }, props: { density: 1, angularVelocity: 0, restitution: 0.3 }, shape: { type: 'box', width: 0.25, height: 0.25, rotation: 0.785 } },
+      { type: 'static', position: { x: 15.5, y: 26 }, props: { density: 1, angularVelocity: 0, restitution: 0.3 }, shape: { type: 'box', width: 0.25, height: 0.25, rotation: 0.785 } },
+      { type: 'static', position: { x: 18.5, y: 26 }, props: { density: 1, angularVelocity: 0, restitution: 0.3 }, shape: { type: 'box', width: 0.25, height: 0.25, rotation: 0.785 } },
+      // === 디플렉터 1: 좌벽 부착 → 우측 갭(x=17~23)으로 안내 ===
+      {
+        type: 'static',
+        position: { x: 0, y: 0 },
+        props: { density: 1, angularVelocity: 0, restitution: 0.1 },
+        shape: { type: 'polyline', rotation: 0, points: [[3, 30], [17, 35]] },
+      },
+      // === 디플렉터 2: 우벽 부착 → 좌측 갭(x=3~9)으로 안내 ===
+      {
+        type: 'static',
+        position: { x: 0, y: 0 },
+        props: { density: 1, angularVelocity: 0, restitution: 0.1 },
+        shape: { type: 'polyline', rotation: 0, points: [[9, 42], [23, 37]] },
+      },
+      // === 디플렉터 3: 좌벽 부착 → 우측 갭으로 안내 ===
+      {
+        type: 'static',
+        position: { x: 0, y: 0 },
+        props: { density: 1, angularVelocity: 0, restitution: 0.1 },
+        shape: { type: 'polyline', rotation: 0, points: [[3, 49], [17, 54]] },
+      },
+      // === 디플렉터 4: 우벽 부착 → 좌측 갭으로 안내 ===
+      {
+        type: 'static',
+        position: { x: 0, y: 0 },
+        props: { density: 1, angularVelocity: 0, restitution: 0.1 },
+        shape: { type: 'polyline', rotation: 0, points: [[9, 61], [23, 56]] },
+      },
+      // === 스피너 존 (y=77) ===
+      { type: 'kinematic', position: { x: 8,    y: 77 }, props: { density: 1, angularVelocity:  5, restitution: 0 }, shape: { type: 'box', width: 2.5, height: 0.1, rotation: 0, color: '#ff6a00', bloomColor: '#ff6a00' } },
+      { type: 'kinematic', position: { x: 13.5, y: 77 }, props: { density: 1, angularVelocity: -5, restitution: 0 }, shape: { type: 'box', width: 2.5, height: 0.1, rotation: 0, color: '#ff6a00', bloomColor: '#ff6a00' } },
+      { type: 'kinematic', position: { x: 19,   y: 77 }, props: { density: 1, angularVelocity:  5, restitution: 0 }, shape: { type: 'box', width: 2.5, height: 0.1, rotation: 0, color: '#ff6a00', bloomColor: '#ff6a00' } },
+      // === 핀 Row D (y=85) ===
+      { type: 'static', position: { x: 7,  y: 85 }, props: { density: 1, angularVelocity: 0, restitution: 0.3 }, shape: { type: 'box', width: 0.25, height: 0.25, rotation: 0.785 } },
+      { type: 'static', position: { x: 10, y: 85 }, props: { density: 1, angularVelocity: 0, restitution: 0.3 }, shape: { type: 'box', width: 0.25, height: 0.25, rotation: 0.785 } },
+      { type: 'static', position: { x: 13, y: 85 }, props: { density: 1, angularVelocity: 0, restitution: 0.3 }, shape: { type: 'box', width: 0.25, height: 0.25, rotation: 0.785 } },
+      { type: 'static', position: { x: 16, y: 85 }, props: { density: 1, angularVelocity: 0, restitution: 0.3 }, shape: { type: 'box', width: 0.25, height: 0.25, rotation: 0.785 } },
+      { type: 'static', position: { x: 19, y: 85 }, props: { density: 1, angularVelocity: 0, restitution: 0.3 }, shape: { type: 'box', width: 0.25, height: 0.25, rotation: 0.785 } },
+      // === 핀 Row E (y=91) ===
+      { type: 'static', position: { x: 8.5,  y: 91 }, props: { density: 1, angularVelocity: 0, restitution: 0.3 }, shape: { type: 'box', width: 0.25, height: 0.25, rotation: 0.785 } },
+      { type: 'static', position: { x: 11.5, y: 91 }, props: { density: 1, angularVelocity: 0, restitution: 0.3 }, shape: { type: 'box', width: 0.25, height: 0.25, rotation: 0.785 } },
+      { type: 'static', position: { x: 14.5, y: 91 }, props: { density: 1, angularVelocity: 0, restitution: 0.3 }, shape: { type: 'box', width: 0.25, height: 0.25, rotation: 0.785 } },
+      { type: 'static', position: { x: 17.5, y: 91 }, props: { density: 1, angularVelocity: 0, restitution: 0.3 }, shape: { type: 'box', width: 0.25, height: 0.25, rotation: 0.785 } },
+    ],
+  },
+  {
     title: 'Wheel of fortune',
     goalY: 111,
     zoomY: 106.75,
