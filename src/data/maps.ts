@@ -96,15 +96,17 @@ export const stages: StageDef[] = [
         props: { density: 1, angularVelocity: 0, restitution: 0.1 },
         shape: { type: 'polyline', rotation: 0, points: [[9, 61], [23, 56]] },
       },
-      // === 디플렉터 갭 스피너 ===
+      // === 디플렉터 갭 스피너 (반전 방향) ===
       // D1 우측 갭 (x=17~23)
-      { type: 'kinematic', position: { x: 20, y: 37 }, props: { density: 1, angularVelocity:  4, restitution: 0 }, shape: { type: 'box', width: 1.5, height: 0.1, rotation: 0, color: '#ff6a00', bloomColor: '#ff6a00' } },
+      { type: 'kinematic', position: { x: 20, y: 37 }, props: { density: 1, angularVelocity: -4, restitution: 0 }, shape: { type: 'box', width: 1.5, height: 0.1, rotation: 0, color: '#ff6a00', bloomColor: '#ff6a00' } },
       // D2 좌측 갭 (x=3~9)
-      { type: 'kinematic', position: { x: 6,  y: 46 }, props: { density: 1, angularVelocity: -4, restitution: 0 }, shape: { type: 'box', width: 1.5, height: 0.1, rotation: 0, color: '#ff6a00', bloomColor: '#ff6a00' } },
+      { type: 'kinematic', position: { x: 6,  y: 46 }, props: { density: 1, angularVelocity:  4, restitution: 0 }, shape: { type: 'box', width: 1.5, height: 0.1, rotation: 0, color: '#ff6a00', bloomColor: '#ff6a00' } },
       // D3 우측 갭 (x=17~23)
-      { type: 'kinematic', position: { x: 20, y: 56 }, props: { density: 1, angularVelocity:  4, restitution: 0 }, shape: { type: 'box', width: 1.5, height: 0.1, rotation: 0, color: '#ff6a00', bloomColor: '#ff6a00' } },
-      // === 퍼널 입구 스피너 (y=96) ===
-      { type: 'kinematic', position: { x: 13, y: 96 }, props: { density: 1, angularVelocity: -3, restitution: 0 }, shape: { type: 'box', width: 2.5, height: 0.1, rotation: 0, color: '#ff6a00', bloomColor: '#ff6a00' } },
+      { type: 'kinematic', position: { x: 20, y: 56 }, props: { density: 1, angularVelocity: -4, restitution: 0 }, shape: { type: 'box', width: 1.5, height: 0.1, rotation: 0, color: '#ff6a00', bloomColor: '#ff6a00' } },
+      // === 퍼널 입구/내부 스피너 ===
+      { type: 'kinematic', position: { x: 13, y: 96  }, props: { density: 1, angularVelocity: -3, restitution: 0 }, shape: { type: 'box', width: 2.5, height: 0.1, rotation: 0, color: '#ff6a00', bloomColor: '#ff6a00' } },
+      { type: 'kinematic', position: { x: 13, y: 100 }, props: { density: 1, angularVelocity:  3, restitution: 0 }, shape: { type: 'box', width: 2,   height: 0.1, rotation: 0, color: '#ff6a00', bloomColor: '#ff6a00' } },
+      { type: 'kinematic', position: { x: 13, y: 104 }, props: { density: 1, angularVelocity: -3, restitution: 0 }, shape: { type: 'box', width: 1.5, height: 0.1, rotation: 0, color: '#ff6a00', bloomColor: '#ff6a00' } },
       // === 스피너 존 (y=77) ===
       { type: 'kinematic', position: { x: 8,    y: 77 }, props: { density: 1, angularVelocity:  5, restitution: 0 }, shape: { type: 'box', width: 2.5, height: 0.1, rotation: 0, color: '#ff6a00', bloomColor: '#ff6a00' } },
       { type: 'kinematic', position: { x: 13.5, y: 77 }, props: { density: 1, angularVelocity: -5, restitution: 0 }, shape: { type: 'box', width: 2.5, height: 0.1, rotation: 0, color: '#ff6a00', bloomColor: '#ff6a00' } },
