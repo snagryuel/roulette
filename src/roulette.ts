@@ -4,6 +4,7 @@ import { type StageDef, stages } from './data/maps';
 import { FastForwader } from './fastForwader';
 import type { GameObject } from './gameObject';
 import type { IPhysics } from './IPhysics';
+import { Item } from './item';
 import { Marble } from './marble';
 import { Minimap } from './minimap';
 import options from './options';
@@ -19,8 +20,31 @@ import { bound } from './utils/bound.decorator';
 import { parseName, shuffle } from './utils/utils';
 import { VideoRecorder } from './utils/videoRecorder';
 
+// 트랙 내부 구간별 x 범위 [minX, maxX, minY, maxY]
+const ITEM_SPAWN_ZONES = [
+  [3, 15, 20, 25],
+  [10, 16, 27, 32],
+  [3, 12, 42, 52],
+  [9, 22, 57, 63],
+  [9, 22, 70, 98],
+];
+const ITEM_COUNT = 5;
+
+function randomItemPositions(): { x: number; y: number }[] {
+  const result: { x: number; y: number }[] = [];
+  for (let i = 0; i < ITEM_COUNT; i++) {
+    const zone = ITEM_SPAWN_ZONES[i % ITEM_SPAWN_ZONES.length];
+    const x = zone[0] + Math.random() * (zone[1] - zone[0]);
+    const y = zone[2] + Math.random() * (zone[3] - zone[2]);
+    result.push({ x, y });
+  }
+  return result;
+}
+
 export class Roulette extends EventTarget {
   private _marbles: Marble[] = [];
+  private _items: Item[] = [];
+  private _nextMarbleId: number = 10000;
 
   private _lastTime: number = 0;
   private _elapsed: number = 0;
@@ -137,9 +161,25 @@ export class Roulette extends EventTarget {
   private _updateMarbles(deltaTime: number) {
     if (!this._stage) return;
 
+    for (const item of this._items) {
+      item.update(deltaTime);
+    }
+
     for (let i = 0; i < this._marbles.length; i++) {
       const marble = this._marbles[i];
       marble.update(deltaTime);
+
+      for (const item of this._items) {
+        if (item.isCollected) continue;
+        const dx = marble.x - item.x;
+        const dy = marble.y - item.y;
+        const distSq = dx * dx + dy * dy;
+        const collectRadius = marble.size / 2 + item.size;
+        if (distSq < collectRadius * collectRadius) {
+          this._collectItem(marble, item);
+        }
+      }
+
       if (marble.skill === Skills.Impact) {
         this._effects.push(new SkillEffect(marble.x, marble.y));
         this.physics.impact(marble.id);
@@ -218,6 +258,7 @@ export class Roulette extends EventTarget {
       winner: this._winner,
       size: { x: this._renderer.width, y: this._renderer.height },
       theme: this._theme,
+      items: this._items,
     };
     this._renderer.render(renderParams, this._uiObjects);
   }
@@ -317,6 +358,7 @@ export class Roulette extends EventTarget {
       this._winnerRank = this._marbles.length - 1;
     }
     this._camera.startFollowingMarbles();
+    this._spawnItems();
 
     if (this._autoRecording) {
       this._recorder.start().then(() => {
@@ -327,6 +369,24 @@ export class Roulette extends EventTarget {
       this.physics.start();
       this._marbles.forEach((marble) => (marble.isActive = true));
     }
+  }
+
+  private _spawnItems() {
+    this._items = randomItemPositions().map(({ x, y }) => new Item(x, y));
+  }
+
+  private _collectItem(marble: Marble, item: Item) {
+    item.isCollected = true;
+
+    const id = this._nextMarbleId++;
+    const newMarble = new Marble(this.physics, id, 1, marble.name, marble.weight, {
+      spawnPos: { x: marble.x + 0.6, y: marble.y },
+      hue: marble.hue,
+    });
+    newMarble.isActive = true;
+    this.physics.activateMarble(id);
+    this._marbles.push(newMarble);
+    this._totalMarbleCount++;
   }
 
   public setSpeed(value: number) {
@@ -427,6 +487,8 @@ export class Roulette extends EventTarget {
     this._clearMap();
     this._loadMap();
     this._goalDist = Infinity;
+    this._items = [];
+    this._nextMarbleId = 10000;
   }
 
   public getCount() {

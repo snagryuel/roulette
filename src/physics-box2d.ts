@@ -169,6 +169,14 @@ export class Box2dPhysics implements IPhysics {
     });
   }
 
+  activateMarble(id: number): void {
+    const marble = this.marbleMap[id];
+    if (marble) {
+      marble.SetAwake(true);
+      marble.SetEnabled(true);
+    }
+  }
+
   start(): void {
     for (const key in this.marbleMap) {
       const marble = this.marbleMap[key];

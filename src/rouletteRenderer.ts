@@ -2,6 +2,7 @@ import type { Camera } from './camera';
 import { canvasHeight, canvasWidth, initialZoom, Themes } from './data/constants';
 import type { StageDef } from './data/maps';
 import type { GameObject } from './gameObject';
+import type { Item } from './item';
 import { KeywordService } from './keywordService';
 import type { Marble } from './marble';
 import type { ParticleManager } from './particleManager';
@@ -22,6 +23,7 @@ export type RenderParameters = {
   winner: Marble | null;
   size: VectorLike;
   theme: ColorTheme;
+  items: Item[];
 };
 
 export class RouletteRenderer {
@@ -144,6 +146,7 @@ export class RouletteRenderer {
     renderParameters.camera.renderScene(this.ctx, () => {
       this.onBeforeEntities();
       this.renderEntities(renderParameters.entities);
+      this.renderItems(renderParameters);
       this.renderEffects(renderParameters);
       this.renderMarbles(renderParameters);
     });
@@ -196,6 +199,11 @@ export class RouletteRenderer {
       this.ctx.setTransform(transform);
     });
     this.ctx.restore();
+  }
+
+  private renderItems({ items, camera }: RenderParameters) {
+    const zoom = camera.zoom * initialZoom;
+    items.forEach((item) => item.render(this.ctx, zoom));
   }
 
   private renderEffects({ effects, camera }: RenderParameters) {

@@ -53,7 +53,14 @@ export class Marble {
     return this.position.angle;
   }
 
-  constructor(physics: IPhysics, order: number, max: number, name?: string, weight: number = 1) {
+  constructor(
+    physics: IPhysics,
+    order: number,
+    max: number,
+    name?: string,
+    weight: number = 1,
+    opts?: { spawnPos?: { x: number; y: number }; hue?: number }
+  ) {
     this.name = name || `M${order}`;
     this.weight = weight;
     this.physics = physics;
@@ -62,14 +69,18 @@ export class Marble {
     this._coolTime = this._maxCoolTime * Math.random();
     this._skillRate = 0.2 * this.weight;
 
-    const maxLine = Math.ceil(max / 10);
-    const line = Math.floor(order / 10);
-    const lineDelta = -Math.max(0, Math.ceil(maxLine - 5));
-    this.hue = (360 / max) * order;
+    this.hue = opts?.hue ?? (360 / max) * order;
     this.color = `hsl(${this.hue} 100% 70%)`;
     this.id = order;
 
-    physics.createMarble(order, 10.25 + (order % 10) * 0.6, maxLine - line + lineDelta);
+    if (opts?.spawnPos) {
+      physics.createMarble(order, opts.spawnPos.x, opts.spawnPos.y);
+    } else {
+      const maxLine = Math.ceil(max / 10);
+      const line = Math.floor(order / 10);
+      const lineDelta = -Math.max(0, Math.ceil(maxLine - 5));
+      physics.createMarble(order, 10.25 + (order % 10) * 0.6, maxLine - line + lineDelta);
+    }
   }
 
   update(deltaTime: number) {
