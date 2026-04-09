@@ -33,7 +33,7 @@ const ITEM_SPAWN_ZONES = [
   [10, 22, 85, 90],  // 핀 열 사이 빈 구간
   [10, 22, 93, 94],  // y=92 핀 열과 y=95 핀 열 사이
 ];
-const ITEM_COUNT = 5;
+const ITEM_COUNT = 10;
 
 function randomItemPositions(): { x: number; y: number }[] {
   const result: { x: number; y: number }[] = [];
